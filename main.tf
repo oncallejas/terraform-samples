@@ -16,11 +16,19 @@ provider "google" {
 }
 
 resource "google_compute_network" "vpc_network" {
-  name = "terraform-network"
+  name                    = var.name-lastname
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnetwork" {
+  name          = var.name-lastname
+  ip_cidr_range = var.cidr-range
+  region        = var.region
+  network       = google_compute_network.vpc_network.id
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name         = "terraform-instance"
+  name         = var.name-lastname
   machine_type = "f1-micro"
   tags         = ["web", "dev"]
 

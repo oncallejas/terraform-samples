@@ -1,2 +1,4 @@
-project                  = "grupo1-349102"
-credentials_file         = "credentials.json"
+project                 = "grupo1-349102"
+credentials_file        = "credentials.json"
+name-lastname           = "nombre-apellido"
+cidr-range              = "10.2.0.0/16"
