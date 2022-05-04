@@ -34,14 +34,33 @@ resource "google_compute_instance" "vm_instance" {
 
   boot_disk {
     initialize_params {
-      image = "cos-cloud/cos-stable"
+      image = "ubuntu-2004-lts"
     }
   }
 
   network_interface {
-    network = google_compute_network.vpc_network.name
+    subnetwork = google_compute_subnetwork.subnetwork.name
     access_config {
     }
   }
+
+  metadata_startup_script = "sudo apt-get update; sudo apt install nginx -y; sudo systemctl start nginx; sudo ufw enable; sudo ufw allow 80/tcp"
+
 }
+
+resource "google_compute_firewall" "web-server" {
+  project     = var.project
+  name        = "allow-http-rule"
+  network     = google_compute_network.vpc_network.name
+  description = "Regla de firewall apuntando a los servidores con etiquetas"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80","22","443","3389"]
+         }
+   source_ranges = ["0.0.0.0/0"]
+   target_tags = ["web"]
+    timeouts {}
+}
+
 
